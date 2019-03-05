@@ -14,9 +14,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async getWeather({ commit }, { lat, long }) {
+    getWeather({ commit }, { lat, long }) {
       // Fetch weather data from Dark Sky API
-      await fetch(
+      fetch(
         `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${
           process.env.VUE_APP_DARK_SKY_KEY
         }/${lat},${long}`

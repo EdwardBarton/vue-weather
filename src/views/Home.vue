@@ -2,7 +2,14 @@
   <v-container fill-height grid-list-md text-xs-center>
     <v-layout row wrap>
       <v-flex xs12 md8 offset-md2>
-        <h1>Current Weather</h1>
+        <Loading
+          :active.sync="isLoading"
+          :can-cancel="true"
+          :is-full-page="fullPage"
+          color="#1976d2"
+          loader="dots"
+          background-color="#aaa"
+        />
         <v-layout row wrap>
           <v-flex xs10 offset-xs1 md6 offset-md3>
             <v-text-field
@@ -26,19 +33,25 @@
 <script>
 import CurrentWeather from "../components/CurrentWeather";
 import WeatherForecastItem from "../components/WeatherForecastItem";
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
   data() {
     return {
-      address: ""
+      address: "",
+      isLoading: false,
+      fullPage: true
     };
   },
   components: {
     CurrentWeather,
-    WeatherForecastItem
+    WeatherForecastItem,
+    Loading
   },
   methods: {
     getLatLong(address) {
+      this.isLoading = true;
       // Convert address to lat/long using Google's Geocoding API
       fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${
@@ -53,7 +66,8 @@ export default {
         };
 
         // Fetch Dark Sky weather for input location
-        this.$store.dispatch("getWeather", location);
+        await this.$store.dispatch("getWeather", location);
+        this.isLoading = false;
       });
     }
   }
