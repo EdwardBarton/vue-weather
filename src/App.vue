@@ -6,8 +6,8 @@
         <span class="font-weight-light"> Weather</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn color="primary" @click="getMyLocation">
-        <span class="mr-2">Get My Location</span>
+      <v-btn color="primary" @click="getLocation">
+        <span class="mr-2">Use My Location</span>
       </v-btn>
     </v-toolbar>
 
@@ -26,34 +26,20 @@
 </template>
 
 <script>
-// Import component
+import { mapState } from "vuex";
 import Loading from "vue-loading-overlay";
-// Import stylesheet
 import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
   name: "App",
   components: { Loading },
-  data() {
-    return {
-      isLoading: false,
-      fullPage: true
-    };
-  },
+  computed: mapState({
+    isLoading: "isLoading",
+    fullPage: "fullPage"
+  }),
   methods: {
-    getMyLocation() {
-      this.isLoading = true;
-      // Get location via browser
-      navigator.geolocation.getCurrentPosition(async position => {
-        const location = {
-          lat: position.coords.latitude,
-          long: position.coords.longitude
-        };
-
-        // Get weather from Dark Sky API
-        await this.$store.dispatch("getWeather", location);
-        this.isLoading = false;
-      });
+    getLocation() {
+      this.$store.dispatch("getLocation", { currentLocation: true });
     }
   }
 };

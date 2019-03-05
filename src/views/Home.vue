@@ -13,9 +13,9 @@
         <v-layout row wrap>
           <v-flex xs10 offset-xs1 md6 offset-md3>
             <v-text-field
-              @keypress.enter="getLatLong(address)"
+              @keypress.enter="getLocation(address)"
               v-model="address"
-              label="Location"
+              label="Address"
               prepend-inner-icon="place"
               autofocus
               clearable
@@ -23,14 +23,17 @@
             ></v-text-field>
           </v-flex>
         </v-layout>
+        <!-- <div v-if="Object.keys(weather).length" class="weather-info"> -->
         <CurrentWeather />
         <WeatherForecastItem v-for="(n, i) in 5" :key="i" />
+        <!-- </div> -->
       </v-flex>
     </v-layout>
   </v-container>
 </template>
 
 <script>
+import { mapState } from "vuex";
 import CurrentWeather from "../components/CurrentWeather";
 import WeatherForecastItem from "../components/WeatherForecastItem";
 import Loading from "vue-loading-overlay";
@@ -39,10 +42,11 @@ import "vue-loading-overlay/dist/vue-loading.css";
 export default {
   data() {
     return {
-      address: "",
-      isLoading: false,
-      fullPage: true
+      address: ""
     };
+  },
+  computed: {
+    ...mapState(["weather", "isLoading", "fullPage"])
   },
   components: {
     CurrentWeather,
@@ -50,25 +54,8 @@ export default {
     Loading
   },
   methods: {
-    getLatLong(address) {
-      this.isLoading = true;
-      // Convert address to lat/long using Google's Geocoding API
-      fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${
-          process.env.VUE_APP_GOOGLE_KEY
-        }`
-      ).then(async resp => {
-        const response = await resp.json();
-        // Setup location object from Google's response
-        const location = {
-          lat: response.results[0].geometry.location.lat,
-          long: response.results[0].geometry.location.lng
-        };
-
-        // Fetch Dark Sky weather for input location
-        await this.$store.dispatch("getWeather", location);
-        this.isLoading = false;
-      });
+    getLocation(address) {
+      this.$store.dispatch("getLocation", { address });
     }
   }
 };
