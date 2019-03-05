@@ -22,12 +22,22 @@ export default {
   name: "App",
   data() {
     return {
-      //
+      lat: "",
+      long: ""
     };
   },
   methods: {
     getMyLocation() {
-      this.$store.dispatch("getLocation");
+      // Get location via browser
+      navigator.geolocation.getCurrentPosition(position => {
+        const location = {
+          lat: position.coords.latitude,
+          long: position.coords.longitude
+        };
+
+        // Get weather from Dark Sky API
+        this.$store.dispatch("getWeather", location);
+      });
     }
   }
 };

@@ -1,5 +1,5 @@
 <template>
-  <div>Current Weather Component</div>
+  <div>{{ weather.currently.temperature }}</div>
 </template>
 
 <script>
