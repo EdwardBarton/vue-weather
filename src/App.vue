@@ -2,8 +2,8 @@
   <v-app>
     <v-toolbar app>
       <v-toolbar-title class="headline text-uppercase">
-        <span>Current</span>
-        <span class="font-weight-light"> Weather</span>
+        <span>Weather</span>
+        <span class="font-weight-light"> App</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn color="primary" @click="getLocation">
@@ -14,7 +14,9 @@
     <v-content>
       <Loading
         :active.sync="isLoading"
-        :can-cancel="true"
+        :height="128"
+        :width="128"
+        :can-cancel="false"
         :is-full-page="fullPage"
         color="#1976d2"
         loader="dots"
