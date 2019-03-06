@@ -1,7 +1,20 @@
 <template>
-  <div v-if="Object.keys(weather).length">
-    {{ weather.currently.temperature }}
-  </div>
+  <v-layout v-if="Object.keys(weather).length">
+    <v-flex xs12 sm4 offset-sm4>
+      <v-card>
+        <v-card-title primary-title>
+          <div>
+            <h3 class="headline mb-0">
+              Currently: {{ Math.round(weather.currently.temperature) }}&#176; F
+            </h3>
+            <div>
+              {{ weather.currently.summary }}
+            </div>
+          </div>
+        </v-card-title>
+      </v-card>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
