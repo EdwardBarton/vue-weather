@@ -63,7 +63,14 @@ export default {
   },
   methods: {
     getLocation(address) {
-      this.$store.dispatch("getLocation", { address });
+      if (address) {
+        this.$store.dispatch("getLocation", { address });
+        // Reset address
+        this.address = "";
+      } else {
+        // Don't search unless user has provided an address
+        return;
+      }
     }
   }
 };
