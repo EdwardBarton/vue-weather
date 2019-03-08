@@ -1,5 +1,5 @@
 <template>
-  <v-layout v-if="Object.keys(weather).length">
+  <v-layout>
     <v-flex xs12 sm2 offset-sm5>
       <v-card>
         <v-card-title primary-title>

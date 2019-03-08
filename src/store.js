@@ -7,23 +7,18 @@ export default new Vuex.Store({
   state: {
     isLoading: false,
     fullPage: true,
-    location: {},
     weather: {}
   },
 
   mutations: {
-    SET_LOCATION(state, locationObj) {
-      Vue.set(state.location, "lat", locationObj.lat);
-      Vue.set(state.location, "long", locationObj.long);
-    },
-    SET_WEATHER(state, weatherData) {
+    GET_WEATHER(state, weatherData) {
       Vue.set(state.weather, "currently", weatherData.currently);
       Vue.set(state.weather, "daily", weatherData.daily);
     }
   },
 
   actions: {
-    async getLocation({ dispatch, commit }, locationObj) {
+    async getLocation({ dispatch }, locationObj) {
       // Start loading overlay
       this.state.isLoading = true;
 
@@ -35,15 +30,15 @@ export default new Vuex.Store({
             lat: position.coords.latitude,
             long: position.coords.longitude
           };
-          // Update app state.location
-          commit("SET_LOCATION", location);
 
           // Fetch Dark Sky weather for state.location
-          dispatch("getWeather", this.state.location);
+          dispatch("getWeather", location);
         });
       }
       // Otherwise the user submitted an address via the input field
       else {
+        // TODO: Edge cases for user input. ";" will result in an error
+
         // Convert the address to a lat/long using Google's Geocoding API
         const response = await fetch(
           `https://maps.googleapis.com/maps/api/geocode/json?address=${
@@ -57,11 +52,9 @@ export default new Vuex.Store({
           lat: geoJSON.results[0].geometry.location.lat,
           long: geoJSON.results[0].geometry.location.lng
         };
-        // Update app state.location
-        commit("SET_LOCATION", location);
 
         // Fetch Dark Sky weather for state.location
-        dispatch("getWeather", this.state.location);
+        dispatch("getWeather", location);
       }
     },
 
@@ -75,7 +68,7 @@ export default new Vuex.Store({
       const weatherJSON = await response.json();
 
       // Update app state w/ weather response data
-      commit("SET_WEATHER", weatherJSON);
+      commit("GET_WEATHER", weatherJSON);
 
       // Stop loading overlay
       this.state.isLoading = false;
